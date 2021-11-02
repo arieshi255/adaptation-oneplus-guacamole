@@ -1,0 +1,23 @@
+Source: adaptation-oneplus-guacamole
+Maintainer: Rushi (Skyliegirl33)
+Section: metapackages
+Priority: optional
+Build-Depends: debhelper (>= 10)
+Standards-Version: 4.5.0.3
+Vcs-Browser: https://github.com/Skyliegirl33/adaptation-oneplus-guacamole
+Vcs-Git: https://github.com/Skyliegirl33/adaptation-oneplus-guacamole.git
+
+Package: adaptation-oneplus-guacamole
+Architecture: all
+Depends: ${misc:Depends},
+         lxc-android (>= 1:9),
+         linux-bootimage-fxtec-pro1,
+         adaptation-hybris-api28-phone
+Description: adaptation-oneplus-guacamole - meta
+ OnePlus 7 Pro api28 adaptation metapackage
+
+Package: adaptation-oneplus-guacamole-configs
+Architecture: all
+Depends: ${misc:Depends},
+         adaptation-oneplus-guacamole (= ${binary:Version}),
+Description: OnePlus 7 Pro's specific adaptation configs

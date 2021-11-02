@@ -1,0 +1,22 @@
+service vendor.trust-hal-1-0 /vendor/bin/hw/vendor.lineage.trust@1.0-service.oneplus_msmnile_HYBRIS_DISABLED
+    disabled
+    oneshot
+    override
+
+service vendor.fingerprint-inscreen-1-0 /vendor/bin/hw/vendor.lineage.biometrics.fingerprint.inscreen@1.0-service.oneplus_msmnile_HYBRIS_DISABLED
+    disabled
+    oneshot
+    override
+ 
+service vendor.livedisplay-hal-2-0-sdm /vendor/bin/hw/vendor.lineage.livedisplay@2.0-service-sdm_HYBRIS_DISABLED
+    disabled
+    oneshot
+    override
+
+service vendor.touch-hal-1-0 /vendor/bin/hw/vendor.lineage.touch@1.0-service.oneplus_msmnile_HYBRIS_DISABLED
+    disabled
+    oneshot
+    override
+
+on property:sys.boot_completed=1
+    write /dev/wlan ON
