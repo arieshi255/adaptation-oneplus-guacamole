@@ -101,11 +101,17 @@ jobs:
       - name: Create build dir
         run: mkdir -p /tmp/buildd-results
 
-      - name: Pull container
-        run: docker pull quay.io/droidian/build-essential:bullseye-amd64
-
       - name: Build kernel
-        run: docker run -v /tmp/buildd-results:/buildd -v /dev:/dev -v /sys/fs/cgroup:/sys/fs/cgroup -v ${PWD}/kernel:/buildd/sources -v ${PWD}:/adaptation --security-opt seccomp:unconfined quay.io/droidian/build-essential:bullseye-amd64 /bin/bash -c 'cd /buildd/sources; source /adaptation/build.sh'
+      - uses: addnab/docker-run-action@v3
+        with:
+          registry: quay.io
+          image: droidian/build-essential:bullseye-amd64
+          options: -v /tmp/buildd-results:/buildd -v /dev:/dev -v /sys/fs/cgroup:/sys/fs/cgroup -v ${{ github.workspace }}/kernel:/build/source
+          run: |
+            apt-get install -y linux-packaging-snippets
+            cd /buildd/sources
+            debian/rules debian/control
+            RELENG_HOST_ARCH="arm64" releng-build-package'
 
       - name: Upload kernel
         uses: actions/upload-release-asset@v1
