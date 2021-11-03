@@ -88,12 +88,12 @@ jobs:
         uses: actions/checkout@v2
         
       - name: Checkout kernel source
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
         with:
           name: Skyliegirl33/android_kernel_oneplus_sm8150
           
       - name: Checkout initramfs builder
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
         with:
           name: Skyliegirl33/initramfs-tools-halium
 
