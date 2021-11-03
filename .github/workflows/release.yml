@@ -105,7 +105,7 @@ jobs:
         run: docker pull quay.io/droidian/build-essential:bullseye-amd64
 
       - name: Build kernel
-        run: docker run -v /tmp/buildd-results:/buildd -v /dev:/dev -v /sys/fs/cgroup:/sys/fs/cgroup -v ${PWD}/kernel:/buildd/sources --security-opt seccomp:unconfined quay.io/droidian/build-essential:bullseye-amd64 /bin/sh -c 'apt-get install -y linux-packaging-snippets; cd /buildd/sources && debian/rules debian/control && RELENG_HOST_ARCH="arm64" releng-build-package'
+        run: docker run -v /tmp/buildd-results:/buildd -v /dev:/dev -v /sys/fs/cgroup:/sys/fs/cgroup -v ${PWD}/kernel:/buildd/sources --security-opt seccomp:unconfined quay.io/droidian/build-essential:bullseye-amd64 /bin/sh -c 'apt-get install -y linux-packaging-snippets; cd /buildd/sources; debian/rules debian/control; RELENG_HOST_ARCH="arm64" releng-build-package'
 
       - name: Upload kernel
         uses: actions/upload-release-asset@v1
