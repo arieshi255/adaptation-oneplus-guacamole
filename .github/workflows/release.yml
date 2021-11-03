@@ -1,0 +1,77 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the bullseye branch
+  #push:
+  #  branches: [ bullseye ]
+  #pull_request:
+  #  branches: [ bullseye ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-20.04
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Get current date
+        run: echo "current_date=$(date +'%Y%m%d')" >> $GITHUB_ENV
+
+      - name: Set suffix
+        run: echo "release_suffix=_${{ env.current_date }}" >> $GITHUB_ENV
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        
+      - name: Checkout kernel source
+      - uses: actions/checkout@v2
+        with:
+          name: Skyliegirl33/android_kernel_oneplus_sm8150
+          
+      - name: Checkout initramfs builder
+      - uses: actions/checkout@v2
+        with:
+          name: Skyliegirl33/initramfs-tools-halium
+
+      - name: QEMU set-up
+        uses: docker/setup-qemu-action@v1
+
+      - name: Create build dir
+        run: mkdir -p /tmp/buildd-results
+
+      - name: Pull container
+        run: docker pull quay.io/droidian/build-essential:bullseye-amd64
+
+      - name: Start Container
+        run: echo CONTAINER_HASH=$(docker run --detach --privileged -v ${PWD}:/adaptation -v /tmp/buildd-results:/buildd -v /dev:/dev -v /sys/fs/cgroup:/sys/fs/cgroup -v ${PWD}/android_kernel_oneplus_sm8150:/buildd/sources --security-opt seccomp:unconfined quay.io/droidian/build-essential:bullseye-amd64 /sbin/init) >> $GITHUB_ENV
+
+      - name: Build kernel
+        run: docker exec $CONTAINER_HASH /bin/sh -c 'cd /buildd/sources; apt-get install -y linux-packaging-snippets debootstrap qemu-user-static binfmt-support dpkg-dev; debian/rules debian/control; RELENG_HOST_ARCH="arm64" releng-build-package'
+
+      
+
+      - name: "Check adaptation file existence"
+        id: check_adaptation_oneplus_guacamole
+        uses: andstor/file-existence-action@v1
+        with:
+          files: "droidian-adaptation-oneplus-guacamole-${{ matrix.debos_arch }}${{ env.release_suffix }}.zip"
+
+      - name: Upload adaptation-oneplus-guacamole sideload
+        if: steps.check_adaptation_oneplus_guacamole.outputs.files_exists == 'true'
+        id: upload-sideload-guacamole
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.once.outputs.upload_url }}
+          asset_path: ./droidian-adaptation-oneplus-guacamole-${{ matrix.debos_arch }}${{ env.release_suffix }}.zip
+          asset_name: droidian-adaptation-oneplus-guacamole-${{ matrix.debos_arch }}${{ env.release_suffix }}.zip
+          asset_content_type: application/gzip
