@@ -100,7 +100,6 @@ jobs:
           path: 'kernel'
 
       - name: Build kernel
-        uses: actions/checkout@v2
       - uses: addnab/docker-run-action@v3
         with:
           registry: quay.io
