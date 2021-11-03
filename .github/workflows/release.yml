@@ -99,7 +99,6 @@ jobs:
           ref: bullseye
           path: 'kernel'
 
-      - name: Build kernel
       - uses: addnab/docker-run-action@v3
         with:
           registry: quay.io
