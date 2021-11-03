@@ -85,7 +85,7 @@ jobs:
         run: echo "release_suffix=_${{ env.current_date }}" >> $GITHUB_ENV
 
       - name: Checkout
-        run: git clone https://github.com/${{ github.repository }}.git ${PWD}/adaptation
+        run: git clone https://github.com/${{ github.repository }}.git ${PWD}
         
       - name: Checkout kernel source
         run: git clone https://github.com/Skyliegirl33/android_kernel_oneplus_sm8150.git ${PWD}/kernel
@@ -105,7 +105,7 @@ jobs:
         run: docker pull quay.io/droidian/build-essential:bullseye-amd64
 
       - name: Build kernel
-        run: docker run -v /tmp/buildd-results:/buildd -v /dev:/dev -v /sys/fs/cgroup:/sys/fs/cgroup -v ${PWD}/kernel:/buildd/sources --security-opt seccomp:unconfined quay.io/droidian/build-essential:bullseye-amd64 /bin/sh -c ${PWD}/adaptation/build.sh
+        run: docker run -v /tmp/buildd-results:/buildd -v /dev:/dev -v /sys/fs/cgroup:/sys/fs/cgroup -v ${PWD}/kernel:/buildd/sources -v ${PWD}:/adaptation --security-opt seccomp:unconfined quay.io/droidian/build-essential:bullseye-amd64 /bin/sh -c /adaptation/build.sh
 
       - name: Upload kernel
         uses: actions/upload-release-asset@v1
