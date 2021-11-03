@@ -103,7 +103,7 @@ jobs:
       - uses: addnab/docker-run-action@v3
         with:
           registry: quay.io
-          image: droidian/build-essential:bullseye-amd64
+          image: build-essential:bullseye-amd64
           options: -v /tmp/buildd-results:/buildd -v /dev:/dev -v /sys/fs/cgroup:/sys/fs/cgroup -v ${{ github.workspace }}/kernel:/build/source
           run: |
             apt-get install -y linux-packaging-snippets
