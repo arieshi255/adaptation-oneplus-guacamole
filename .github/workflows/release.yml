@@ -85,12 +85,15 @@ jobs:
         run: echo "release_suffix=_${{ env.current_date }}" >> $GITHUB_ENV
 
       - name: Checkout kernel source
-        run: git clone https://github.com/Skyliegirl33/android_kernel_oneplus_sm8150.git ${PWD}/kernel
+        uses: actions/checkout@v2
+        with:
+          repository: Skyliegirl33/android_kernel_oneplus_sm8150
+          ref: bullseye
           
       - name: Checkout initramfs builder
         uses: actions/checkout@v2
         with:
-          name: Skyliegirl33/initramfs-tools-halium
+          repository: Skyliegirl33/initramfs-tools-halium
 
       - name: QEMU set-up
         uses: docker/setup-qemu-action@v1
@@ -107,7 +110,7 @@ jobs:
         with:
           registry: quay.io
           image: quay.io/droidian/build-essential:bullseye-amd64
-          options: -v /tmp/buildd-results:/buildd -v /dev:/dev -v /sys/fs/cgroup:/sys/fs/cgroup -v ${{ github.workspace }}/kernel:/buildd/sources
+          options: -v /tmp/buildd-results:/buildd -v /dev:/dev -v /sys/fs/cgroup:/sys/fs/cgroup -v ${{ github.workspace }}/android_kernel_oneplus_sm8150:/buildd/sources
           run: |
             apt-get install -y linux-packaging-snippets
             ls /buildd/sources
