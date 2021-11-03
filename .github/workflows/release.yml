@@ -89,6 +89,7 @@ jobs:
         with:
           repository: Skyliegirl33/android_kernel_oneplus_sm8150
           ref: bullseye
+          path: 'kernel'
           
       - name: Checkout initramfs builder
         uses: actions/checkout@v2
@@ -110,12 +111,10 @@ jobs:
         with:
           registry: quay.io
           image: quay.io/droidian/build-essential:bullseye-amd64
-          options: -v /tmp/buildd-results:/buildd -v /dev:/dev -v /sys/fs/cgroup:/sys/fs/cgroup -v ${{ github.workspace }}/android_kernel_oneplus_sm8150:/buildd/sources
+          options: -v /tmp/buildd-results:/buildd -v /dev:/dev -v /sys/fs/cgroup:/sys/fs/cgroup -v ${{ github.workspace }}/kernel:/buildd/sources
           run: |
             apt-get install -y linux-packaging-snippets
-            ls /buildd/sources
             cd /buildd/sources
-            pwd
             debian/rules debian/control
             RELENG_HOST_ARCH="arm64" releng-build-package
 
