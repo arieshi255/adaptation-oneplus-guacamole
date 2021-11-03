@@ -107,7 +107,7 @@ jobs:
         with:
           registry: quay.io
           image: quay.io/droidian/build-essential:bullseye-amd64
-          options: -v /tmp/buildd-results:/buildd -v /dev:/dev -v /sys/fs/cgroup:/sys/fs/cgroup -v ${PWD}/kernel:/buildd/sources
+          options: -v /tmp/buildd-results:/buildd -v /dev:/dev -v /sys/fs/cgroup:/sys/fs/cgroup -v ${{ github.workspace }}/kernel:/buildd/sources
           run: |
             apt-get install -y linux-packaging-snippets
             ls /buildd/sources
