@@ -15,11 +15,67 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  once:
+    runs-on: ubuntu-20.04
+    name: Create GitHub release
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}${{ steps.create_nightly.outputs.upload_url }}
+
+    steps:
+      - name: Create Release
+        id: create_release
+        if: startsWith(github.ref, 'refs/tags/droidian')
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          draft: true
+          prerelease: false
+
+      - uses: dev-drprasad/delete-tag-and-release@v0.1.3
+        if: startsWith(github.ref, 'refs/tags/droidian') != true
+        with:
+          delete_release: true # default: false
+          tag_name: nightly # tag name to delete
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Tag snapshot
+        if: startsWith(github.ref, 'refs/tags/droidian') != true
+        uses: tvdias/github-tagger@v0.0.1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          tag: nightly
+
+      - name: Create Release
+        id: create_nightly
+        if: startsWith(github.ref, 'refs/tags/droidian') != true
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: nightly
+          release_name: nightly
+          draft: false
+          prerelease: true
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-20.04
+    needs: once
 
+    strategy:
+      fail-fast: true
+      matrix:
+        arch: [amd64]
+        template: [kernel-builder]
+        dist: [bullseye]
+        namespace: [droidian]
+        debos_arch: [arm64]
+
+    name: ${{ matrix.template }}:${{ matrix.dist }} on ${{ matrix.debos_arch }}
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Get current date
@@ -56,22 +112,12 @@ jobs:
       - name: Build kernel
         run: docker exec $CONTAINER_HASH /bin/sh -c 'cd /buildd/sources; apt-get install -y linux-packaging-snippets debootstrap qemu-user-static binfmt-support dpkg-dev; debian/rules debian/control; RELENG_HOST_ARCH="arm64" releng-build-package'
 
-      
-
-      - name: "Check adaptation file existence"
-        id: check_adaptation_oneplus_guacamole
-        uses: andstor/file-existence-action@v1
-        with:
-          files: "droidian-adaptation-oneplus-guacamole-${{ matrix.debos_arch }}${{ env.release_suffix }}.zip"
-
-      - name: Upload adaptation-oneplus-guacamole sideload
-        if: steps.check_adaptation_oneplus_guacamole.outputs.files_exists == 'true'
-        id: upload-sideload-guacamole
+      - name: Upload kernel
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.once.outputs.upload_url }}
-          asset_path: ./droidian-adaptation-oneplus-guacamole-${{ matrix.debos_arch }}${{ env.release_suffix }}.zip
-          asset_name: droidian-adaptation-oneplus-guacamole-${{ matrix.debos_arch }}${{ env.release_suffix }}.zip
-          asset_content_type: application/gzip
+          asset_path: ${PWD}/android_kernel_oneplus_sm8150/out/KERNEL_OBJ/boot.img
+          asset_name: droidian-boot-${{ matrix.debos_arch }}-${{ env.release_suffix }}.zip
+          asset_content_type: application/x-ima
