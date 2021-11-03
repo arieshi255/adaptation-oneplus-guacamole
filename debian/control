@@ -11,7 +11,7 @@ Package: adaptation-oneplus-guacamole
 Architecture: all
 Depends: ${misc:Depends},
          lxc-android (>= 1:9),
-         linux-bootimage-fxtec-pro1,
+         linux-bootimage-oneplus-guacamole,
          adaptation-hybris-api28-phone
 Description: adaptation-oneplus-guacamole - meta
  OnePlus 7 Pro api28 adaptation metapackage
