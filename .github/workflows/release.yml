@@ -84,18 +84,6 @@ jobs:
       - name: Set suffix
         run: echo "release_suffix=_${{ env.current_date }}" >> $GITHUB_ENV
 
-      - name: Checkout kernel source
-        uses: actions/checkout@v2
-        with:
-          repository: Skyliegirl33/android_kernel_oneplus_sm8150
-          ref: bullseye
-          path: 'kernel'
-          
-      - name: Checkout initramfs builder
-        uses: actions/checkout@v2
-        with:
-          repository: Skyliegirl33/initramfs-tools-halium
-
       - name: QEMU set-up
         uses: docker/setup-qemu-action@v1
 
@@ -104,6 +92,13 @@ jobs:
 
       - name: Pull docker image
         run: docker pull quay.io/droidian/build-essential:bullseye-amd64
+
+      - name: Checkout kernel source
+        uses: actions/checkout@v2
+        with:
+          repository: Skyliegirl33/android_kernel_oneplus_sm8150
+          ref: bullseye
+          path: 'kernel'
 
       - name: Build kernel
         uses: actions/checkout@v2
