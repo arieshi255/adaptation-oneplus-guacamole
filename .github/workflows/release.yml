@@ -107,12 +107,12 @@ jobs:
         with:
           registry: quay.io
           image: quay.io/droidian/build-essential:bullseye-amd64
-          options: -v /tmp/buildd-results:/buildd -v /dev:/dev -v /sys/fs/cgroup:/sys/fs/cgroup -v ${{ github.workspace }}/kernel:/build/source
+          options: -v /tmp/buildd-results:/buildd -v /dev:/dev -v /sys/fs/cgroup:/sys/fs/cgroup -v ${{ github.workspace }}/kernel:/buildd/sources
           run: |
             apt-get install -y linux-packaging-snippets
             cd /buildd/sources
             debian/rules debian/control
-            RELENG_HOST_ARCH="arm64" releng-build-package'
+            RELENG_HOST_ARCH="arm64" releng-build-package
 
       - name: Upload kernel
         uses: actions/upload-release-asset@v1
