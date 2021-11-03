@@ -117,5 +117,5 @@ jobs:
         with:
           upload_url: ${{ needs.once.outputs.upload_url }}
           asset_path: ${{ github.workspace }}/kernel/out/KERNEL_OBJ/boot.img
-          asset_name: droidian-boot-${{ matrix.debos_arch }}-${{ env.release_suffix }}.img
+          asset_name: droidian-boot-${{ matrix.debos_arch }}${{ env.release_suffix }}.img
           asset_content_type: application/x-ima
