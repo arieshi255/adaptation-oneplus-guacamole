@@ -1,4 +1,3 @@
-#!/bin/sh
 apt-get install -y linux-packaging-snippets
 cd /buildd/sources
 ls /buildd/sources
