@@ -86,6 +86,8 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          ref: 'bullseye'
         
       - name: Checkout kernel source
         run: git clone https://github.com/Skyliegirl33/android_kernel_oneplus_sm8150.git ${PWD}/kernel
