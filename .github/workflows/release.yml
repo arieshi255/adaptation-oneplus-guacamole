@@ -73,7 +73,7 @@ jobs:
         template: [kernel-builder]
         dist: [bullseye]
         namespace: [droidian]
-        debos_arch: [arm64]
+        debos_arch: [amd64]
 
     name: ${{ matrix.template }}:${{ matrix.dist }} on ${{ matrix.debos_arch }}
     # Steps represent a sequence of tasks that will be executed as part of the job
