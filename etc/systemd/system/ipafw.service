@@ -1,0 +1,10 @@
+[Unit]
+Description=Load IPA firmware
+After=lxc@android.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/bash -c "echo 1 > /dev/ipa"
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,10 @@
+[Unit]
+Description=Enable wifi on boot
+After=lxc@android.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/bash -c "echo ON > /dev/wlan"
+
+[Install]
+WantedBy=multi-user.target
