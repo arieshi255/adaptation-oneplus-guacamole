@@ -74,6 +74,17 @@ info "Installing payload onto the rootfs"
 
 tar -C "${mpoint}" -xf "${workdir}/payload.tar" || error "Unable to install payload"
 
+# Enter chroot to finish setup
+info "Entering chroot to finialize setup"
+
+cat << EOF | chroot "${mpoint}" /bin/bash
+PATH=/bin:/usr/bin
+systemctl enable wlan.service
+systemctl enable ipafw.service
+usermod -aG android_inet android_inet_raw root
+usermod -g 3003 _apt
+EOF
+
 # If we should flash the kernel, do it
 if [ -e "${workdir}/boot.img" ]; then
 	info "Kernel found, flashing"
