@@ -113,6 +113,11 @@ jobs:
             debian/rules debian/control
             RELENG_HOST_ARCH="arm64" releng-build-package
 
+      - name: Build zip
+      - run: |
+          "cp kernel/out/KERNEL_OBJ/boot.img boot.img" 
+          "./package.sh"
+
       - name: Upload kernel
         uses: actions/upload-release-asset@v1
         env:
@@ -123,12 +128,12 @@ jobs:
           asset_name: droidian-boot-${{ matrix.debos_arch }}${{ env.release_suffix }}.img
           asset_content_type: application/x-ima
           
-      - name: Upload kernel deb
+      - name: Upload adaptation zip
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.once.outputs.upload_url }}
-          asset_path: ${{ github.workspace }}/kernel/out/KERNEL_OBJ/linux-bootimage*.deb
-          asset_name: linux-bootimage-oneplus-guacamole+git${{ env.release_suffix }}.deb
-          asset_content_type: application/vnd.debian.binary-package
+          asset_path: ${{ github.workspace }}/adaptation-test.zip
+          asset_name: adaptation-oneplus-guacamole{{ env.release_suffix }}.zip
+          asset_content_type: application/zip
