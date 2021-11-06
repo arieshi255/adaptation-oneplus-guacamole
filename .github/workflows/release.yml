@@ -117,11 +117,11 @@ jobs:
             RELENG_HOST_ARCH="arm64" releng-build-package
 
       - name: Build zip
+        working-directory: ${{ github.workspace }}
         run: |
           cd ${GITHUB_WORKSPACE}
           cp kernel/out/KERNEL_OBJ/boot.img boot.img
           ./package.sh
-        shell: bash
 
       - name: Upload kernel
         uses: actions/upload-release-asset@v1
