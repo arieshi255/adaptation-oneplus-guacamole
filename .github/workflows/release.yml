@@ -114,7 +114,7 @@ jobs:
             RELENG_HOST_ARCH="arm64" releng-build-package
 
       - name: Build zip
-      - run: |
+        run: |
           "cp kernel/out/KERNEL_OBJ/boot.img boot.img" 
           "./package.sh"
 
