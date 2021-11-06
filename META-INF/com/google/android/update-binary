@@ -33,6 +33,7 @@ cleanup() {
 	fi
 
 	info "Cleanup"
+	rm -r "${workdir}/META-INF" || true
 	rm -f "${workdir}/payload.tar" || true
 	rmdir "${mpoint}" || true
 	rmdir "${workdir}" || true
@@ -67,12 +68,12 @@ trap cleanup EXIT
 # Extract payload
 info "Extracting payload from zip file"
 
-unzip -o -d "${workdir}" "${ZIP}" || error "Unable to extract payload"
+unzip -o -d "${workdir}" "${ZIP}" -x "META-INF/*" || error "Unable to extract payload"
 
-# Finally untar the payload ontop the roots
+# Finally untar the payload ontop the rootfs
 info "Installing payload onto the rootfs"
 
-tar -C "${mpoint}" -xf "${workdir}/payload.tar" || error "Unable to install payload"
+tar -xf "${workdir}/payload.tar" -C "${mpoint}" || error "Unable to install payload"
 
 # Enter chroot to finish setup
 info "Entering chroot to finialize setup"
