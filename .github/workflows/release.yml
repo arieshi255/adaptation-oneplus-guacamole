@@ -140,5 +140,5 @@ jobs:
         with:
           upload_url: ${{ needs.once.outputs.upload_url }}
           asset_path: ${{ github.workspace }}/adaptation-test.zip
-          asset_name: adaptation-oneplus-guacamole{{ env.release_suffix }}.zip
+          asset_name: adaptation-oneplus-guacamole${{ env.release_suffix }}.zip
           asset_content_type: application/zip
