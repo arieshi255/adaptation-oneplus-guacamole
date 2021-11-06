@@ -122,3 +122,13 @@ jobs:
           asset_path: ${{ github.workspace }}/kernel/out/KERNEL_OBJ/boot.img
           asset_name: droidian-boot-${{ matrix.debos_arch }}${{ env.release_suffix }}.img
           asset_content_type: application/x-ima
+          
+      - name: Upload kernel deb
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.once.outputs.upload_url }}
+          asset_path: ${{ github.workspace }}/kernel/out/KERNEL_OBJ/linux-bootimage*.deb
+          asset_name: linux-bootimage-oneplus-guacamole+git${{ env.release_suffix }}.deb
+          asset_content_type: application/vnd.debian.binary-package
