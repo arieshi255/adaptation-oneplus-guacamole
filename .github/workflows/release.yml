@@ -116,8 +116,9 @@ jobs:
       - name: Build zip
         working-directory: ${{ github.workspace }}
         run: |
-          "cp ${GITHUB_WORKSPACE}/kernel/out/KERNEL_OBJ/boot.img ${GITHUB_WORKSPACE}/boot.img" 
-          "./package.sh"
+          cp ${GITHUB_WORKSPACE}/kernel/out/KERNEL_OBJ/boot.img ${GITHUB_WORKSPACE}/boot.img
+          cd ${GITHUB_WORKSPACE}
+          ./package.sh
         shell: bash
 
       - name: Upload kernel
