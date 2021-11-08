@@ -80,10 +80,11 @@ info "Entering chroot to finialize setup"
 
 cat << EOF | chroot "${mpoint}" /bin/bash
 PATH=/bin:/usr/bin
-systemctl enable wlan.service
-systemctl enable ipafw.service
+systemctl reenable wlan.service
+systemctl reenable ipafw.service
 systemctl reenable upower.service
-usermod -aG android_inet android_inet_raw root
+usermod -aG android_inet root
+usermod -aG android_inet_raw root
 usermod -g 3003 _apt
 EOF
 
