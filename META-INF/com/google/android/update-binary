@@ -83,6 +83,7 @@ PATH=/bin:/usr/bin
 systemctl reenable wlan.service
 systemctl reenable ipafw.service
 systemctl reenable upower.service
+systemctl mask systemd-journald.service
 usermod -aG android_inet root
 usermod -aG android_inet_raw root
 usermod -g 3003 _apt
